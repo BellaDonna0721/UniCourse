@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/src/main/java/com/tjy/mapper/CourseMapper.java" value="baa60031-0489-4fb6-b5e1-5a6d8cc74983" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/tjy/mapper/SelectMapper.java" value="baa60031-0489-4fb6-b5e1-5a6d8cc74983" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/tjy/mapper/UserMapper.java" value="baa60031-0489-4fb6-b5e1-5a6d8cc74983" />
+  </component>
+</project>

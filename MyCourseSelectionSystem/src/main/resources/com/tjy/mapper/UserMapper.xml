@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tjy.mapper.UserMapper">
+
+<!--    更新用户信息-->
+    <update id="update">
+    update user
+    <set>
+        <if test = "username != null and username != ''">
+            username = #{username},
+        </if>
+
+        <if test = "password != null and password != ''">
+            password = #{password},
+        </if>
+
+        <if test = "name != null and name != ''">
+            name = #{name},
+        </if>
+
+        <if test = "role != null and role != ''">
+            role = #{role},
+        </if>
+
+        <if test = "major != null and major != ''">
+            major = #{major},
+        </if>
+
+        <if test="updateTime != null">
+            update_time = #{updateTime}
+        </if>
+    </set>
+    where id = #{id}
+    </update>
+
+    <!--    条件查询-->
+    <select id="list" resultType="com.tjy.pojo.User">
+        select * from user
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name},'%')
+            </if>
+            <if test="role != null and role != ''">
+                and role = #{role}
+            </if>
+            <if test="major != null and major != ''">
+                and major = #{major}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <!--    批量删除用户-->
+    <delete id="delete">
+        delete
+        from user
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
