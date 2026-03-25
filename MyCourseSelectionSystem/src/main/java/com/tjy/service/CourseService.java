@@ -2,6 +2,7 @@ package com.tjy.service;
 
 import com.tjy.pojo.Course;
 import com.tjy.pojo.PageBean;
+import com.tjy.pojo.Result;
 import com.tjy.pojo.User;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public interface CourseService {
      * 修改课程
      * @param course
      */
-    void update(Course course);
+    void updateById(Course course);
 
     /**
      * 根据id删除课程/批量删除课程
@@ -41,4 +42,18 @@ public interface CourseService {
      * @return
      */
     Course getById(Integer id);
+
+    /**
+     * 引入redis根据id查询数据
+     * @param id
+     * @return
+     */
+    Result queryById(Integer id);
+
+    /**
+     * 引入redis的更新逻辑
+     * @param course
+     * @return
+     */
+    Result update(Course course);
 }

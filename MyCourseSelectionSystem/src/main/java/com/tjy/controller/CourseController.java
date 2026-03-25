@@ -40,8 +40,7 @@ public class CourseController {
     @PutMapping("/course")
     public Result update(@RequestBody Course course){
         log.info("修改课程:{}", course);
-        courseService.update(course);
-        return Result.success();
+        return courseService.update(course);
     }
 
     /**
@@ -92,7 +91,7 @@ public class CourseController {
     @GetMapping("/course/{id}")
     public Result getById(@PathVariable Integer id){
         log.info("根据id查询课程:" + id);
-        Course course = courseService.getById(id);
-        return Result.success(course);
+        //Course course = courseService.getById(id);
+        return courseService.queryById(id);
     }
 }
