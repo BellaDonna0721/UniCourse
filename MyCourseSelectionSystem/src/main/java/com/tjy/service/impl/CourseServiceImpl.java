@@ -11,6 +11,7 @@ import com.tjy.pojo.PageBean;
 import com.tjy.pojo.Result;
 import com.tjy.pojo.User;
 import com.tjy.service.CourseService;
+import com.tjy.utils.CacheClient;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,12 +22,16 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class CourseServiceImpl implements CourseService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private CacheClient cacheClient;
 
     @Autowired
     CourseMapper courseMapper;
@@ -74,7 +79,8 @@ public class CourseServiceImpl implements CourseService {
             for (Integer courseId : ids){
                 selectMapper.deleteByCourseId(courseId);
                 //清理单个课程缓存
-                stringRedisTemplate.delete("cache:course:" + courseId);
+                //stringRedisTemplate.delete("cache:course:" + courseId);
+                cacheClient.delete("cache:course:" + courseId);
             }
             //由于新增、删除、修改都会影响分页结果，建议清理所有分页索引缓存（以 cache:course:list: 开头）
             java.util.Set<String> keys = stringRedisTemplate.keys("cache:course:list:*");
@@ -99,7 +105,7 @@ public class CourseServiceImpl implements CourseService {
                         ":" + maxCapacity + ":" + isRemaining;
 
         // 2. 从 Redis 查询“索引缓存”（ID 列表和总数）
-        String listJson = stringRedisTemplate.opsForValue().get(listKey);
+        String listJson = cacheClient.get(listKey);
 
         if (listJson != null && !listJson.isEmpty()) {
             // 缓存命中：解析出 ID 列表和总数
@@ -113,7 +119,8 @@ public class CourseServiceImpl implements CourseService {
 
             for (Integer id : ids) {
                 String courseKey = "cache:course:" + id;
-                String courseJson = stringRedisTemplate.opsForValue().get(courseKey);
+                String courseJson = cacheClient.get(courseKey);
+
                 if (courseJson != null && !courseJson.isEmpty()) {
                     courses.add(JSON.parseObject(courseJson, Course.class));
                 } else {
@@ -140,7 +147,8 @@ public class CourseServiceImpl implements CourseService {
         for (Course course : courseList) {
             ids.add(course.getId());
             String courseKey = "cache:course:" + course.getId();
-            stringRedisTemplate.opsForValue().set(courseKey, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
+            //stringRedisTemplate.opsForValue().set(courseKey, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
+            cacheClient.set(courseKey, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
         }
 
         // 4.2 写入“索引缓存”
@@ -148,7 +156,8 @@ public class CourseServiceImpl implements CourseService {
         listResult.put("total", pageInfo.getTotal());
         listResult.put("ids", ids);
         // 分页索引缓存时间可以稍微设置短一点（例如 10 分钟），或者在增删时主动清理
-        stringRedisTemplate.opsForValue().set(listKey, listResult.toJSONString(), 10L, TimeUnit.MINUTES);
+        //stringRedisTemplate.opsForValue().set(listKey, listResult.toJSONString(), 10L, TimeUnit.MINUTES);
+        cacheClient.set(listKey, listResult.toJSONString(), 10L, TimeUnit.MINUTES);
 
         return new PageBean<>(pageInfo.getTotal(), courseList);
     }
@@ -171,25 +180,48 @@ public class CourseServiceImpl implements CourseService {
      */
     @Override
     public Result queryById(Integer id) {
+        //Course course = queryWithPassThrough(id);
+
+        //改用封装的cacheClient类
+        Course course = cacheClient.queryWithPassThrough(
+                "cache:course:", id, Course.class, id2 -> getById(id2),
+                30L + (int)(Math.random()*5), TimeUnit.MINUTES);
+        if (course == null){
+            return Result.error("课程不存在");
+        }
+        else{
+            return Result.success(course);
+        }
+    }
+
+    public Course queryWithPassThrough(Integer id){
         String key = "cache:course:" + id;
         //从redis查询缓存
         String courseJson = stringRedisTemplate.opsForValue().get(key);
+
+        //若为空数据
+        if (Objects.equals(courseJson, "")){
+            return null;
+        }
         //判断是否存在
-        if (courseJson != null && !courseJson.isEmpty()){
+        if (courseJson != null){
             //存在，直接返回
             Course course = JSON.parseObject(courseJson, Course.class);
-            return Result.success(course);
+            return course;
         }
         //不存在，根据id查询数据库
         else {
             Course course = getById(id);
             //不存在，返回错误
             if (course == null){
-                return Result.error("课程不存在！");
+                //将空值写入redis
+                stringRedisTemplate.opsForValue().set(key, "", 2L, TimeUnit.MINUTES);
+                return null;
             }
             //存在，写入redis并返回
-            stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
-            return Result.success(course);
+            int randomNum = (int)(Math.random()*5);
+            stringRedisTemplate.opsForValue().set(key, JSONObject.toJSONString(course), 30L + randomNum, TimeUnit.MINUTES);
+            return course;
         }
     }
 
