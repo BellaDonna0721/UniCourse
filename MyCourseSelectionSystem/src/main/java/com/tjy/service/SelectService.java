@@ -34,4 +34,6 @@ public interface SelectService {
      * @return
      */
     List<Selection> getByCourseId(Integer courseId);
+
+    Selection getSelection(Integer userId, Integer courseId);
 }

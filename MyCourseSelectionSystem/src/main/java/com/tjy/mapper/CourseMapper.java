@@ -26,6 +26,9 @@ public interface CourseMapper {
      */
     void update(Course course);
 
+    @org.apache.ibatis.annotations.Update("update course set selected = selected + 1 where id = #{id} and selected < capacity")
+    int updateSelectedWithCapacityCheck(@org.apache.ibatis.annotations.Param("id") Integer id);
+
 
     /**
      * 根据id删除课程/批量删除课程

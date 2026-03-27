@@ -15,7 +15,7 @@ public interface SelectMapper {
      * 添加选课
      * @param newSelection
      */
-    @Insert("insert into selection (user_id, course_id, create_time, update_time) VALUES (#{userId}, #{courseId}, #{createTime}, #{updateTime} )")
+    @Insert("insert into selection (id, user_id, course_id, create_time, update_time) VALUES (#{id}, #{userId}, #{courseId}, #{createTime}, #{updateTime} )")
     void add(Selection newSelection);
 
     /**
@@ -32,7 +32,7 @@ public interface SelectMapper {
      * @param id
      */
     @Delete("delete from selection where id = #{id}")
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
 
     /**

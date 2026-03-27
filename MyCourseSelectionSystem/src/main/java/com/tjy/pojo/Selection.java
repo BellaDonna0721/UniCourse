@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Selection {
-    private Integer id;
+    private Long id;
     private Integer userId;
     private Integer courseId;
     private LocalDateTime createTime;

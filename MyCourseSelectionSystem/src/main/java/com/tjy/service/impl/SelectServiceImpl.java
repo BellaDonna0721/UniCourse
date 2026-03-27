@@ -7,6 +7,9 @@ import com.tjy.pojo.Course;
 import com.tjy.pojo.Selection;
 import com.tjy.pojo.User;
 import com.tjy.service.SelectService;
+import com.tjy.utils.RedisIdWorker;
+import jakarta.annotation.Resource;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +28,9 @@ public class SelectServiceImpl implements SelectService {
     @Autowired
     UserMapper userMapper;
 
-    @Transactional(rollbackFor = Exception.class)
+    @Resource
+    RedisIdWorker redisIdWorker;
+
     @Override
     public Selection add(Integer userId, Integer courseId) {
 
@@ -37,6 +42,7 @@ public class SelectServiceImpl implements SelectService {
             }
             // 检查课程是否存在且容量未满
             Course course = courseMapper.getById(courseId);
+
             if (course == null) {
                 throw new RuntimeException("课程不存在");
             }
@@ -44,6 +50,19 @@ public class SelectServiceImpl implements SelectService {
                 throw new RuntimeException("课程容量已满");
             }
 
+            // 5. 返回新创建的选课记录
+            synchronized (userId.toString().intern()) {
+                //获取代理对象
+                SelectService proxy = (SelectService) AopContext.currentProxy();
+                return proxy.getSelection(userId, courseId);
+            }
+        } finally {
+
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Selection getSelection(Integer userId, Integer courseId) {
             // 检查用户是否已经选过该课程
             Selection existingSelection = selectMapper.findByUserIdAndCourseId(userId, courseId);
             if (existingSelection != null) {
@@ -51,22 +70,28 @@ public class SelectServiceImpl implements SelectService {
             }
 
             // 所有检查通过，执行选课操作
+            //生成订单id
+            long orderId = redisIdWorker.nextId("order");
+
             Selection newSelection = new Selection();
+            newSelection.setId(orderId);
             newSelection.setUserId(userId);
             newSelection.setCourseId(courseId);
             newSelection.setCreateTime(LocalDateTime.now());
             newSelection.setUpdateTime(LocalDateTime.now());
 
+            // course.setSelected(course.getSelected() + 1); // 已选人数+1
+            // courseMapper.update(course);
+
+            //更新课程的已选人数，使用MySQL行锁拦截超卖
+            int updated = courseMapper.updateSelectedWithCapacityCheck(courseId);
+            if (updated == 0) {
+                // 更新失败，说明容量已满
+                throw new RuntimeException("课程已被抢光");
+            }
+
             selectMapper.add(newSelection);
-            //选课成功后，更新课程的已选人数
-            course.setSelected(course.getSelected() + 1); // 已选人数+1
-            courseMapper.update(course);
-
-            // 5. 返回新创建的选课记录
             return newSelection;
-        } finally {
-
-        }
     }
 
     /**
