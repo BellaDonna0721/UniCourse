@@ -11,11 +11,13 @@ import com.tjy.utils.RedisIdWorker;
 import jakarta.annotation.Resource;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SelectServiceImpl implements SelectService {
@@ -30,6 +32,9 @@ public class SelectServiceImpl implements SelectService {
 
     @Resource
     RedisIdWorker redisIdWorker;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @Override
     public Selection add(Integer userId, Integer courseId) {
@@ -91,6 +96,14 @@ public class SelectServiceImpl implements SelectService {
             }
 
             selectMapper.add(newSelection);
+            
+            // 清除对应的课程缓存和分页列表缓存，防止读到旧的已选人数
+            stringRedisTemplate.delete("cache:course:" + courseId);
+            Set<String> keys = stringRedisTemplate.keys("cache:course:list:*");
+            if (keys != null && !keys.isEmpty()) {
+                stringRedisTemplate.delete(keys);
+            }
+            
             return newSelection;
     }
 
@@ -114,6 +127,13 @@ public class SelectServiceImpl implements SelectService {
             //退课成功后，更新课程的已选人数
             course.setSelected(course.getSelected() - 1); // 已选人数-1
             courseMapper.update(course);
+            
+            // 清除对应的课程缓存和分页列表缓存，更新最新的余量
+            stringRedisTemplate.delete("cache:course:" + courseId);
+            Set<String> keys = stringRedisTemplate.keys("cache:course:list:*");
+            if (keys != null && !keys.isEmpty()) {
+                stringRedisTemplate.delete(keys);
+            }
         } finally {
 
         }

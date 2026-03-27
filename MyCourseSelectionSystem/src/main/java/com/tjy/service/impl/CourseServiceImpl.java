@@ -148,7 +148,7 @@ public class CourseServiceImpl implements CourseService {
             ids.add(course.getId());
             String courseKey = "cache:course:" + course.getId();
             //stringRedisTemplate.opsForValue().set(courseKey, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
-            cacheClient.set(courseKey, JSONObject.toJSONString(course), 30L, TimeUnit.MINUTES);
+            cacheClient.set(courseKey, course, 30L, TimeUnit.MINUTES);
         }
 
         // 4.2 写入“索引缓存”
@@ -157,7 +157,7 @@ public class CourseServiceImpl implements CourseService {
         listResult.put("ids", ids);
         // 分页索引缓存时间可以稍微设置短一点（例如 10 分钟），或者在增删时主动清理
         //stringRedisTemplate.opsForValue().set(listKey, listResult.toJSONString(), 10L, TimeUnit.MINUTES);
-        cacheClient.set(listKey, listResult.toJSONString(), 10L, TimeUnit.MINUTES);
+        cacheClient.set(listKey, listResult, 10L, TimeUnit.MINUTES);
 
         return new PageBean<>(pageInfo.getTotal(), courseList);
     }
