@@ -7,12 +7,12 @@
 6 silly config load:file:D:\study\SpringBootStudy\course-selection-system\nodejs\node_global\etc\npmrc
 7 verbose title npm search @web-types
 8 verbose argv "search" "--json" "@web-types"
-9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_39_58_575Z-
-10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_39_58_575Z-debug-0.log
+9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_15_695Z-
+10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_15_695Z-debug-0.log
 11 silly logfile start cleaning logs, removing 2 files
 12 silly search searching packages
 13 silly logfile done cleaning log files
-14 http fetch GET 200 https://registry.npmmirror.com/-/v1/search?text=%40web-types&size=20&from=0&quality=0.65&popularity=0.98&maintenance=0.5 559ms (cache updated)
+14 http fetch GET 200 https://registry.npmmirror.com/-/v1/search?text=%40web-types&size=20&from=0&quality=0.65&popularity=0.98&maintenance=0.5 136ms (cache updated)
 15 silly search search completed
 16 verbose cwd D:\study\SpringBootStudy\course-selection-system\MyCourseSelectionSystem
 17 verbose os Windows_NT 10.0.26100

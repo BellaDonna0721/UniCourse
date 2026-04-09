@@ -7,11 +7,11 @@
 6 silly config load:file:D:\study\SpringBootStudy\course-selection-system\nodejs\node_global\etc\npmrc
 7 verbose title npm info @web-types/lit
 8 verbose argv "info" "--json" "@web-types/lit"
-9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_40_00_870Z-
-10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_40_00_870Z-debug-0.log
-11 silly logfile start cleaning logs, removing 2 files
+9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_16_808Z-
+10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_16_808Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
 12 silly logfile done cleaning log files
-13 http fetch GET 200 https://registry.npmmirror.com/@web-types%2flit 104ms (cache revalidated)
+13 http fetch GET 200 https://registry.npmmirror.com/@web-types%2flit 97ms (cache revalidated)
 14 silly view {
 14 silly view   '2.0.0-3': {
 14 silly view     _attachments: {},

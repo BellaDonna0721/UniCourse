@@ -1,0 +1,22 @@
+0 verbose cli D:\study\SpringBootStudy\course-selection-system\nodejs\node.exe D:\study\SpringBootStudy\course-selection-system\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.9.0
+2 info using node@v24.14.0
+3 silly config load:file:D:\study\SpringBootStudy\course-selection-system\nodejs\node_modules\npm\npmrc
+4 silly config load:file:D:\study\SpringBootStudy\course-selection-system\MyCourseSelectionSystem\.npmrc
+5 silly config load:file:C:\Users\tjy23\.npmrc
+6 silly config load:file:D:\study\SpringBootStudy\course-selection-system\nodejs\node_global\etc\npmrc
+7 verbose title npm search @web-types
+8 verbose argv "search" "--json" "@web-types"
+9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-09T00_39_13_912Z-
+10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-09T00_39_13_912Z-debug-0.log
+11 silly logfile start cleaning logs, removing 2 files
+12 silly search searching packages
+13 silly logfile done cleaning log files
+14 http fetch GET 200 https://registry.npmmirror.com/-/v1/search?text=%40web-types&size=20&from=0&quality=0.65&popularity=0.98&maintenance=0.5 2527ms (cache updated)
+15 silly search search completed
+16 verbose cwd D:\study\SpringBootStudy\course-selection-system\MyCourseSelectionSystem
+17 verbose os Windows_NT 10.0.26100
+18 verbose node v24.14.0
+19 verbose npm  v11.9.0
+20 verbose exit 0
+21 info ok

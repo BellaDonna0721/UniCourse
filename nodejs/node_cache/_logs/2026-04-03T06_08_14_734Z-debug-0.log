@@ -7,8 +7,8 @@
 6 silly config load:file:D:\study\SpringBootStudy\course-selection-system\nodejs\node_global\etc\npmrc
 7 verbose title npm config list
 8 verbose argv "config" "list" "--json"
-9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_39_56_372Z-
-10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-03-25T11_39_56_372Z-debug-0.log
+9 verbose logfile logs-max:10 dir:D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_14_734Z-
+10 verbose logfile D:\study\SpringBootStudy\course-selection-system\nodejs\node_cache\_logs\2026-04-03T06_08_14_734Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
 12 verbose cwd D:\study\SpringBootStudy\course-selection-system\MyCourseSelectionSystem
 13 verbose os Windows_NT 10.0.26100
